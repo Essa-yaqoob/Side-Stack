@@ -4,14 +4,14 @@ import { verifyJwt } from "../utils/jwt.js";
 const isAuthenticated = async (req, res, next) => {
   try {
     const token = req.cookies?.token;
-
+    
     if (!token) {
       return res.status(400).json({
         success: false,
         message: "You are not authenticated for this action",
       });
     }
-
+    
     const decodedToken = await verifyJwt(token);
 
     if (!decodedToken) {
@@ -21,7 +21,9 @@ const isAuthenticated = async (req, res, next) => {
       });
     }
 
-    const isUserExisit = await User.findById({ id: decodedToken._id });
+    const userId = decodedToken.id
+
+    const isUserExisit = await User.findById(userId);
 
     if (!isUserExisit) {
       return res.status(400).json({
@@ -30,7 +32,7 @@ const isAuthenticated = async (req, res, next) => {
       });
     }
 
-    req.user = decodedToken._id;
+    req.user = userId
 
     next();
   } catch (error) {

@@ -11,11 +11,12 @@ const generateJwt = (id) => {
 
 const verifyJwt = (token ) => {
     try {
-        return decodedToken = jwt.verify(token, process.env.JWT_SCERET_KEY)
+        const decodedToken = jwt.verify(token, process.env.JWT_SCERET_KEY)
+        return decodedToken
     } catch (error) {
         console.log(`Error while verifying jwt token : ${token}`)
         return false;
     }
 }
 
-export { generateJwt }
+export { generateJwt, verifyJwt }
