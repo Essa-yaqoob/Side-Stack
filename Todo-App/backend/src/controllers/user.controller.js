@@ -1,12 +1,13 @@
 import { User } from "../models/user.model.js";
 import { v4 as uuidv4, v4 } from "uuid";
-import { generateJwt } from "../utils/jwt.js";
+import { generateJwt, verifyJwt } from "../utils/jwt.js";
 
 const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
     if (!firstName || !lastName || !email || !password) {
+      console.log("first");
       return res.status(400).json({
         success: false,
         message: "Required all fields",
@@ -96,16 +97,37 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   try {
     return res.status(200).clearCookie("token").json({
-      success : true,
-      message : "Logout succesfullt"
+      success: true,
+      message: "Logout succesfullt",
+    });
+  } catch (error) {
+    console.log(`Error while logout : ${error}`);
+  }
+};
+
+const isAuthCheck = async (req, res) => {
+  try {
+    const token = req.cookies?.token;
+    console.log(token)
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: "Please login again",
+      });
+    }
+    const verifyToken = await verifyJwt(token);
+    if (!verifyToken) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid token",
+      });
+    }
+    return res.status(200).json({
+      isAuthenticated : true
     })
   } catch (error) {
-    console.log(`Error while logout : ${error}`)
+    console.log(error)
   }
-}
-
-export {
-  register,
-  login,
-  logout
 };
+
+export { register, login, logout, isAuthCheck };
