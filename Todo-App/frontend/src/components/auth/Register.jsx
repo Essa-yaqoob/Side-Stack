@@ -4,7 +4,7 @@ import { Input } from "../ui/input";
 import bgImg from "../../assets/bgImg.jpeg";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setIsAuthenticated } from "@/store/userSlice";
 
@@ -111,6 +111,12 @@ const Register = () => {
             Create Account
           </button>
         </form>
+        <p className="mt-3 text-white">
+          Already have an account{" "}
+          <Link to={"/login"} className="hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
 
       {/* Right Section - Image */}

@@ -41,12 +41,13 @@ const addTodo = async (req, res) => {
       return res.status(500).json({
         success: false,
         message: "something went wrong please try again",
-      });
+      }, {new:true});
     }
 
     return res.status(201).json({
       success: true,
       message: "todo created successfully",
+      todo
     });
   } catch (error) {
     console.log(`Error while creating todo : ${error}`);
@@ -74,7 +75,7 @@ const updateTodo = async (req, res) => {
 
     const updateTodo = await Todo.findByIdAndUpdate(todoId, {
       content,
-    });
+    }, {new:true});
 
     if (!updateTodo) {
       return res.status(500).json({
@@ -86,6 +87,7 @@ const updateTodo = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Todo updated successfully",
+      todo : updateTodo
     });
   } catch (error) {
     console.log(`Error while updating todo : ${error}`);
@@ -111,6 +113,7 @@ const deleteTodo = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Todo deleted successfully",
+      todo
     });
   } catch (error) {
     console.log(`Error while deleting todo : ${error}`);
@@ -137,6 +140,7 @@ const todoIsComplete = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: `Todo toggle successfully : ${todo.isComplete}`,
+      todo
     });
   } catch (error) {
     console.log(`Error while toggle todo : ${error}`);

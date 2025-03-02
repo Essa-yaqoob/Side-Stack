@@ -7,7 +7,6 @@ const register = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
 
     if (!firstName || !lastName || !email || !password) {
-      console.log("first");
       return res.status(400).json({
         success: false,
         message: "Required all fields",
@@ -108,7 +107,6 @@ const logout = async (req, res) => {
 const isAuthCheck = async (req, res) => {
   try {
     const token = req.cookies?.token;
-    console.log(token)
     if (!token) {
       return res.status(400).json({
         success: false,

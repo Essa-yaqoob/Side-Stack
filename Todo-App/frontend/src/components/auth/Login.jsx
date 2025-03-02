@@ -4,9 +4,9 @@ import { Input } from "../ui/input";
 import bgImg from "../../assets/bgImg.jpeg";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { setIsAuthenticated } from "@/store/userSlice";
+import { setIsAuthenticated} from "@/store/userSlice";
 
 const Login = () => {
   const [userData, setUserData] = useState({
@@ -26,13 +26,14 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials : true
+          withCredentials: true,
         }
       );
       toast.success(res.data.message);
       console.log(res.data.success);
       disPatch(setIsAuthenticated(res.data.success));
-      navigate("/")
+      localStorage.setItem("user", JSON.stringify(res.data.user.userName))
+      navigate("/");
     } catch (error) {
       toast.error(error.response.data.message);
       disPatch(setIsAuthenticated(error.response.data.success));
@@ -86,6 +87,12 @@ const Login = () => {
             Log in
           </button>
         </form>
+        <p className="mt-3 text-white">
+          Don't have an account?{" "}
+          <Link to={"/register"} className="hover:underline">
+            Signup
+          </Link>
+        </p>
       </div>
 
       {/* Right Section - Image */}
