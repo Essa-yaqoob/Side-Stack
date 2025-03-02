@@ -38,16 +38,19 @@ const addTodo = async (req, res) => {
     await User.findByIdAndUpdate(userId, { $push: { todos: todo._id } });
 
     if (!todo) {
-      return res.status(500).json({
-        success: false,
-        message: "something went wrong please try again",
-      }, {new:true});
+      return res.status(500).json(
+        {
+          success: false,
+          message: "something went wrong please try again",
+        },
+        { new: true }
+      );
     }
 
     return res.status(201).json({
       success: true,
       message: "todo created successfully",
-      todo
+      todo,
     });
   } catch (error) {
     console.log(`Error while creating todo : ${error}`);
@@ -73,9 +76,13 @@ const updateTodo = async (req, res) => {
       });
     }
 
-    const updateTodo = await Todo.findByIdAndUpdate(todoId, {
-      content,
-    }, {new:true});
+    const updateTodo = await Todo.findByIdAndUpdate(
+      todoId,
+      {
+        content,
+      },
+      { new: true }
+    );
 
     if (!updateTodo) {
       return res.status(500).json({
@@ -87,7 +94,7 @@ const updateTodo = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Todo updated successfully",
-      todo : updateTodo
+      todo: updateTodo,
     });
   } catch (error) {
     console.log(`Error while updating todo : ${error}`);
@@ -113,7 +120,7 @@ const deleteTodo = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Todo deleted successfully",
-      todo
+      todo,
     });
   } catch (error) {
     console.log(`Error while deleting todo : ${error}`);
@@ -140,11 +147,55 @@ const todoIsComplete = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: `Todo toggle successfully : ${todo.isComplete}`,
-      todo
+      todo,
     });
   } catch (error) {
     console.log(`Error while toggle todo : ${error}`);
   }
 };
 
-export { getAllTodos, addTodo, updateTodo, deleteTodo, todoIsComplete };
+const getPendingTodos = async (req, res) => {
+  const userId = req.user;
+
+  const todos = await Todo.find({
+    createdBy: userId,
+    $and: [{ isComplete: false }],
+  });
+
+  if (!todos) {
+    return res.status(400).json({
+      message: "No todos pending",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Pending todos",
+    todos,
+  });
+};
+
+const getCompleteTodos = async (req, res) => {
+  try {
+    const userId = req.user;
+
+    const todos = await Todo.find({
+      createdBy: userId,
+      $and: [{ isComplete: true }],
+    });
+
+    if (!todos) {
+      return res.status(400).json({
+        message: "No todos pending",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Pending todos",
+      todos,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getAllTodos, addTodo, updateTodo, deleteTodo, todoIsComplete, getPendingTodos,getCompleteTodos };

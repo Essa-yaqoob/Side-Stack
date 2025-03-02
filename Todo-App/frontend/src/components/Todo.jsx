@@ -18,7 +18,13 @@ const Todo = ({
           checked={todo.isComplete}
           className="border-white border"
         />
-        <p className={`${todo.isComplete ?"line-through text-gray-500" :"text-white"}`}>{todo.content}</p>
+        <p
+          className={`${
+            todo.isComplete ? "line-through text-gray-500" : "text-white"
+          }`}
+        >
+          {todo.content}
+        </p>
       </div>
 
       <div className="flex items-center gap-2 text-xs">

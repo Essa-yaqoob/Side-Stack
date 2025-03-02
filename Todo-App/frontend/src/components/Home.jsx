@@ -15,21 +15,6 @@ import {
 } from "@/store/todosSlice";
 import toast from "react-hot-toast";
 
-const btnObj = [
-  {
-    name: "All Todo",
-    path: "/",
-  },
-  {
-    name: "Pending",
-    path: "/pending",
-  },
-  {
-    name: "Completed",
-    path: "/completed",
-  },
-];
-
 const Home = () => {
   const disPatch = useDispatch();
   const navigate = useNavigate();
@@ -112,10 +97,38 @@ const Home = () => {
         {},
         { withCredentials: true }
       );
-      console.log(res)
-      disPatch(setTodoIsCompleted(res.data.todo))
+      console.log(res);
+      disPatch(setTodoIsCompleted(res.data.todo));
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    }
+  };
+
+  const getAllTodos = async () => {
+    getTodo();
+  };
+
+  const getPendingTodo = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/todo/pending-todos`,
+        { withCredentials: true }
+      );
+      disPatch(setTodos(res.data.todos));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCompleteTodo = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/todo/completed-todos`,
+        { withCredentials: true }
+      );
+      disPatch(setTodos(res.data.todos));
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -137,9 +150,9 @@ const Home = () => {
   return (
     <div className="bg-gray-800 flex flex-col items-center min-h-screen">
       <div className="mt-3 flex gap-5">
-        {btnObj.map((btn) => (
-          <Button>{btn.name}</Button>
-        ))}
+        <Button onClick={getAllTodos}>All Todo</Button>
+        <Button onClick={getPendingTodo}>Pending</Button>
+        <Button onClick={getCompleteTodo}>Completed</Button>
       </div>
 
       <div className="border-white border w-[95%] sm:w-[80%] mt-3">

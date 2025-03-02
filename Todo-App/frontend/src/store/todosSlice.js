@@ -28,6 +28,9 @@ const todosSlice = createSlice({
             todo._id === action.payload._id ? {...action.payload} : {...todo}
         ))
     }
+
+    //? these action for pending or completed todos
+    
   },
 });
 
